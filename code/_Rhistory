@@ -1,0 +1,512 @@
+#install.packages("ggplot2")
+#install.packages("devtools")
+devtools::install_github("hadley/lineprof")
+plot(0:50, sizes-40, xlab = "Length",
+ylab = "Bytes excluding overhead", type = "n")
+#Memory usage and garbage collection
+mem_used()
+library(pryr)
+#Memory usage and garbage collection
+mem_used()
+mem_change(x <- 1:1e6)
+#Memory profiling with lineprof
+first <- scan(file, what = character(1), nlines = 1,
+sep = sep, quiet = TRUE)
+# using apply group of functtions
+# apply
+# by
+# eapply
+# lapply
+# mapply
+# rapply
+# sapply
+# tapply
+mtcars
+m <- matrix(c(1:10,11:20), nrow=5, ncol=4)
+m
+# compute average for all the columns
+apply(m,2,mean)
+# compute average for all the rows
+apply(m,1,mean)
+# creating custom functions and apply it over columns and rows
+apply(m, 1:2, function(x) x^2)
+# by function
+class(mtcars)
+head(mtcars)
+names(mtcars)
+#compute the aveerage mileage by cylnder type
+by(mtcars[,-2], mtcars$cyl, colMeans)
+head(mtcars)
+#by function for categorical variables
+by(mtcars[,c(1,5)], factor(mtcars$cyl), colMeans)
+# eapply function
+# computes the statistical function by an environment
+e <- new.env()
+e$a <- 1:100
+e$b <- 2003:2300
+e
+mean(e) # this is erroneous
+eapply(e, mean) # applies function to each of the elements in a list
+# lapply is applicable when your input is a list and
+#it also returns output as a list
+mylist<- as.list(mtcars)
+lapply(mylist, median)
+lapply(mylist, mean)
+# sapply - similar to vapply
+# sapply takes input as list/matrix and output is a vector
+sapply(mylist, median)
+# vapply
+vapply(mylist, fivenum, c(min=0,'Q1'=0,median =0, 'Q3'=0, max=0))
+# replicate function
+replicate(5, rnorm(5, 100, 2), simplify=T)
+# sapply - similar to vapply
+# sapply takes input as list/matrix and output is a vector
+#The sapply() function works like lapply(), but it tries to simplify
+#the output to the most elementary data structure that is possible.
+#And indeed, sapply() is a ‘wrapper’ function for lapply().
+sapply(mylist, median)
+#mapply
+#The mapply() function stands for ‘multivariate’ apply.
+#Its purpose is to be able to vectorize arguments to a function
+#that is not usually accepting vectors as arguments.
+l1 <- list(mtcars[,1:4])
+str(l1)
+l2 <- list(mtcars[,3:8])
+str(l2)
+# sum of corresponding elements captured in L1 and L2
+mapply(sum, x=l1,y=l2)
+# sum of corresponding elements captured in L1 and L2
+mapply(max, x=l1,y=l2)
+# sum of corresponding elements captured in L1 and L2
+mapply(mean, x=l1,y=l2)
+# sum of corresponding elements captured in L1 and L2
+mapply(min, x=l1,y=l2)
+# sum of corresponding elements captured in L1 and L2
+mapply(max, x=l1,y=l2)
+# sum of corresponding elements captured in L1 and L2
+mapply(sum, x=l1,y=l2)
+l1
+l2
+sum(mtcars[1])
+sum(mtcars[1],mtcars[2])
+sum(mtcars[1],mtcars[2],mtcars[3],mtcars[4])
+sum(mtcars[1],mtcars[2],mtcars[3],mtcars[4],mtcars[5],mtcars[6],mtcars[7],mtcars[8])
+sum(mtcars[1],mtcars[2],mtcars[3],mtcars[4],mtcars[3],mtcars[4],mtcars[5],mtcars[6],mtcars[7],mtcars[8])
+# sum of corresponding elements captured in L1 and L2
+mapply(sum, x=l1,y=l2)
+# vapply
+vapply(mylist, fivenum, c(min=0,'Q1'=0,median =0, 'Q3'=0, max=0))
+# rapply
+rapply(mtcars[,1:3], log2, how='list')
+rapply(mtcars[,1:3], sum, how='list')
+rapply(mtcars[,1:3], mode, how='list')
+rapply(mtcars[,1:3], max, how='list')
+#tapply function
+tapply(mtcars$mpg, mtcars$cyl, mean)
+library(ggplot2)
+head(diamonds)
+# sweep function
+df = as.matrix(mtcars[2:6,2:5])
+rownames(df) <-NULL
+avg<-apply(df,2,mean)
+sweep(df,2,avg,"-")
+sweep(df,2,apply(df,2,mean),"-")
+library(data.table)
+df = data.frame(mtcars[,1:5])
+head(df)
+library(data.table)
+dt = data.table(mtcars[,1:5])
+# library Data.Table (open source tool)
+# goals of data.table library is to process large datasets by doing
+# reducing the programming time- fewer ffunctions, less variable repetition
+# reducing the computation time- fast aggregation, update by referencing
+install.packages("data.table")
+library(data.table)
+df = data.frame(mtcars[,1:5])
+head(df)
+library(data.table)
+dt = data.table(mtcars[,1:5])
+dt1 = data.table(mtcars[,1:5])
+tables()
+sapply(dt, class)
+Name <- c("John", "Tim", NA)
+Sex <- c("men", "men", "women")
+Age <- c(45, 53, NA)
+dt <- data.frame(Name, Sex, Age)
+dt
+#Now will see for missings in the dataset
+is.na(dt)
+# find sum or percentage of missing values
+sum(is.na(dt))
+mean(is.na(dt))*100
+#statistical applications the missing values might be coded with a number, for example 99
+dt$Age[dt$Age == 99] <- NA
+Name <- c("John", "Tim", NA)
+Sex <- c("men", NA, "women")
+Age <- c(45, 53, NA)
+dt <- data.frame(Name, Sex, Age)
+dt
+na.omit(dt)
+dt2 <- na.omit(dt)
+dt2
+dt
+dt2
+dt
+#na.rm
+mean(dt$Age)
+mean(dt$Age,na.rm = TRUE)
+#complete.cases
+dt[!complete.cases(dt),]
+#complete.cases
+dt[complete.cases(dt),]
+dt
+#complete.cases
+dt[!complete.cases(dt),]
+nrow(dt)
+ncol(dt)
+nrow(dt[!complete.cases(dt),])
+nrow(dt[complete.cases(dt),])
+# Train dataset
+train_dataset <- read.csv("train.csv")
+head(train_dataset)
+nrow(train_dataset)
+ncol(train_dataset)
+sum(is.na(train_dataset))
+mean(train_dataset$Age)
+mean(train_dataset$Age, na.rm = TRUE)
+summary(train_dataset)
+install.packages("dplyr")
+install.packages("dplyr")
+library(dplyr)
+diamonds
+diamonds
+diamonds
+library(dplyr)
+install.packages("dplyr")
+library(dplyr)
+library(ggplot2)
+diamonds
+nrow(diamonds)
+head(diamonds)
+# application of filter function
+df <- filter(diamonds, price > 326 & price < 400)
+head(df)
+dim(df)
+# select function
+df <- select(diamonds, carat, cut, color, clarity, depth, price)
+head(df)
+head(diamonds)
+# mutate function
+df <- mutate(diamonds, per_carat_p = price/carat)
+head(df)
+# mutate function
+df <- mutate(diamonds, per_carat_p = price/carat)
+head(df)
+# mutate function
+df1 <- mutate(diamonds, per_carat_p = price/carat)
+head(df1)
+# mutate function
+df1 <- mutate(diamonds, per_carat_p = price/carat)
+head(df1)
+# select function
+df <- select(diamonds, carat, cut, color, clarity, depth, price)
+head(df)
+# mutate function
+df1 <- mutate(diamonds, per_carat_p = price/carat)
+head(df1)
+head(df1)
+# arrange function
+df<-arrange(diamonds,price)
+tail(df)
+# mutate function
+df1 <- mutate(diamonds, per_carat_p = price/carat)
+# arrange function
+df<-arrange(diamonds,price)
+tail(df)
+# arrange function
+df<-arrange(diamonds,desc(price))
+head(df)
+#summarize function
+summarize(diamonds, mean_price= mean(price, na.rm=T),
+median_price = median(price,na.rm = T))
+#introduction to pipe operator
+df <- diamonds %>%
+filter(cut=="Ideal") %>%
+select(carat, cut, color, price, clarity) %>%
+mutate(price_per_c = price/carat)
+head(df)
+m <- matrix(c(1:10,11:20), nrow=5, ncol=4)
+m
+# compute average for all the columns
+apply(m,2,mean)
+# compute average for all the rows
+apply(m,1,mean)
+# creating custom functions and apply it over columns and rows
+apply(m, 1:2, function(x) x^2)
+# by function
+class(mtcars)
+head(mtcars)
+names(mtcars)
+#compute the aveerage mileage by cylnder type
+by(mtcars[,-2], mtcars$cyl, colMeans)
+# eapply function
+# computes the statistical function by an environment
+e <- new.env()
+e$a <- 1:100
+e$b <- 2003:2300
+e
+mean(e) # this is erroneous
+eapply(e, mean) # applies function to each of the elements in a list
+# lapply is applicable when your input is a list and
+#it also returns output as a list
+mylist<- as.list(mtcars)
+lapply(mylist, median)
+# sapply - similar to vapply
+# sapply takes input as list/matrix and output is a vector
+#The sapply() function works like lapply(), but it tries to simplify
+#the output to the most elementary data structure that is possible.
+#And indeed, sapply() is a ‘wrapper’ function for lapply().
+sapply(mylist, median)
+# vapply
+vapply(mylist, fivenum, c(min=0,'Q1'=0,median =0, 'Q3'=0, max=0))
+# vapply
+vapply(mylist, fivenum, c(,'Q1'=0,median =0, 'Q3'=0, max=0))
+# vapply
+vapply(mylist, fivenum, c('Q1'=0,median =0, 'Q3'=0, max=0))
+# vapply
+vapply(mylist, fivenum, c(min=10,'Q1'=0,median =0, 'Q3'=0, max=0))
+# vapply
+vapply(mylist, fivenum, c(min=0,'Q1'=0,median =0, 'Q3'=0, max=0))
+# vapply
+vapply(mylist, fivenum, c(min=0,'Q1'=0,median =0, 'Q3'=0, max=0))
+#mapply
+#The mapply() function stands for ‘multivariate’ apply.
+#Its purpose is to be able to vectorize arguments to a function
+#that is not usually accepting vectors as arguments.
+l1 <- list(mtcars[,1:4])
+l2 <- list(mtcars[,3:8])
+l2
+str(l2)
+# sum of corresponding elements captured in L1 and L2
+#sum(mtcars[1],mtcars[2],mtcars[3],mtcars[4],mtcars[3],mtcars[4],mtcars[5],mtcars[6],mtcars[7],mtcars[8])
+mapply(sum, x=l1,y=l2)
+# sum of corresponding elements captured in L1 and L2
+sum(mtcars[1],mtcars[2],mtcars[3],mtcars[4],mtcars[3],mtcars[4],mtcars[5],mtcars[6],mtcars[7],mtcars[8])
+# rapply - recursive apply
+rapply(mtcars[,1:3], log2, how='list')
+rapply(mtcars[,1:3], max, how='list')
+#tapply function
+#Apply a function to each cell of a ragged array, that is to each (non-empty)
+#group of values given by a unique combination of the levels of certain factors.
+tapply(mtcars$mpg, mtcars$cyl, mean)
+library(data.table)
+dt = data.table(mtcars[,1:5])
+dt1 = data.table(mtcars[,1:5])
+tables()
+library(tidyr)
+library(tidyr)
+library(dplyr)
+datasets::mtcars
+edit(mtcars)
+mtcars$car <- rownames(mtcars)
+mtcars <- mtcars[, c(12, 1:11)]
+head(mtcars)
+#gather==>gather - converts wide data to longer format
+#syntax
+#gather(data, key, value, ..., na.rm = FALSE, convert = FALSE)
+mtcarsNew <- mtcars %>% gather(attribute, value, -car)
+head(mtcarsNew)
+tail(mtcarsNew)
+## the great thing with tidyr() is u can select the certain columns other u can leave
+mtcarsNew <- mtcars %>% gather(attribute, value, mpg:gear)
+head(mtcarsNew)
+tail(mtcarsNew)
+View(mtcars)
+tail(mtcarsNew)
+date <- as.Date('2016-01-01') + 0:14
+hour <- sample(1:24, 15)
+min <- sample(1:60, 15)
+second <- sample(1:60, 15)
+event <- sample(letters, 15)
+data <- data.frame(date, hour, min, second, event)
+data
+dataNew <- data %>%
+unite(datehour, date, hour, sep = ' ') %>%
+unite(datetime, datehour, min, second, sep = ':')
+dataNew
+lumn into two or more colum
+# seperate -- splits the column into two or more columns
+data1 <- dataNew %>%
+separate(datetime, c('date', 'time'), sep = ' ') %>%
+separate(time, c('hour', 'min', 'second'), sep = ':')
+data1
+# using apply group of functtions
+# apply
+# by
+# eapply
+# lapply
+# mapply
+# rapply
+# sapply
+# tapply
+mtcars
+m <- matrix(c(1:10,11:20), nrow=5, ncol=4)
+m
+# compute average for all the columns
+apply(m,2,mean)
+# compute average for all the rows
+apply(m,1,mean)
+# creating custom functions and apply it over columns and rows
+apply(m, 1:2, function(x) x^2)
+#compute the aveerage mileage by cylnder type
+by(mtcars[,-2], mtcars$cyl, colMeans)
+#by function for categorical variables
+by(mtcars[,c(1,5)], factor(mtcars$cyl), colMeans)
+# eapply function
+# computes the statistical function by an environment
+e <- new.env()
+a
+e$a <- 1:100
+e$b <- 2003:2300
+e
+mean(e) # this is erroneous
+eapply(e, mean)
+mean(e)# this is erroneous
+a<-c(10,20,30)
+mean(a)
+# eapply function
+# computes the statistical function by an environment
+e <- new.env()
+eapply(e, mean) # applies function to each of the elements in a list
+# eapply function
+# computes the statistical function by an environment
+e <- new.env()
+e$a <- 1:100
+e$b <- 2003:2300
+e
+eapply(e, mean) # applies function to each of the elements in a list
+# lapply is applicable when your input is a list and
+#it also returns output as a list
+mylist<- as.list(mtcars)
+mtylist
+mylist
+lapply(mylist, median)
+# replicate function
+replicate(5, rnorm(5, 100, 2), simplify=T)
+# replicate function
+replicate(5, rnorm(5, 100, 2), simplify=T)
+#mapply
+#The mapply() function stands for ‘multivariate’ apply.
+#Its purpose is to be able to vectorize arguments to a function
+#that is not usually accepting vectors as arguments.
+l1 <- list(mtcars[,1:4])
+l1
+str(l1)
+l2 <- list(mtcars[,3:8])
+l2
+str(l2)
+# sum of corresponding elements captured in L1 and L2
+sum(mtcars[1],mtcars[2],mtcars[3],mtcars[4],mtcars[3],mtcars[4],mtcars[5],mtcars[6],mtcars[7],mtcars[8])
+# sum of corresponding elements captured in L1 and L2
+sum(mtcars[1],mtcars[2],mtcars[3],mtcars[4],mtcars[3],mtcars[4],mtcars[5],mtcars[6],mtcars[7],mtcars[8])
+mapply(sum, x=l1,y=l2)
+# rapply - recursive apply
+rapply(mtcars[,1:3], log2, how='list')
+# rapply - recursive apply
+rapply(mtcars[,1:3], log2, how='list')
+#mapply
+#The mapply() function stands for ‘multivariate’ apply.
+#Its purpose is to be able to vectorize arguments to a function
+#that is not usually accepting vectors as arguments.
+l1 <- list(mtcars[,1:4])
+l1
+str(l1)
+l2 <- list(mtcars[,3:8])
+l2
+str(l2)
+# sum of corresponding elements captured in L1 and L2
+sum(mtcars[1],mtcars[2],mtcars[3],mtcars[4],mtcars[3],mtcars[4],mtcars[5],mtcars[6],mtcars[7],mtcars[8])
+setwd("C:/Users/Dhanasekaran N/Desktop/iPrimed/Technical 1/DAY5/code")
+#mapply
+#The mapply() function stands for ‘multivariate’ apply.
+#Its purpose is to be able to vectorize arguments to a function
+#that is not usually accepting vectors as arguments.
+l1 <- list(mtcars[,1:4])
+l1
+str(l1)
+l2 <- list(mtcars[,3:8])
+l2
+str(l2)
+# sum of corresponding elements captured in L1 and L2
+sum(mtcars[1],mtcars[2],mtcars[3],mtcars[4],mtcars[3],mtcars[4],mtcars[5],mtcars[6],mtcars[7],mtcars[8])
+mapply(sum, x=l1,y=l2)
+library(tidyr)
+mtcars
+#mapply
+#The mapply() function stands for ‘multivariate’ apply.
+#Its purpose is to be able to vectorize arguments to a function
+#that is not usually accepting vectors as arguments.
+l1 <- list(mtcars[,1:4])
+l1
+str(l1)
+l2 <- list(mtcars[,3:8])
+l2
+str(l2)
+# sum of corresponding elements captured in L1 and L2
+sum(mtcars[1],mtcars[2],mtcars[3],mtcars[4],mtcars[3],mtcars[4],mtcars[5],mtcars[6],mtcars[7],mtcars[8])
+mtcars
+mtcars <- mtcars[-1]
+mtcars
+# sum of corresponding elements captured in L1 and L2
+sum(mtcars[1],mtcars[2],mtcars[3],mtcars[4],mtcars[3],mtcars[4],mtcars[5],mtcars[6],mtcars[7],mtcars[8])
+mapply(sum, x=l1,y=l2)
+#mapply
+#The mapply() function stands for ‘multivariate’ apply.
+#Its purpose is to be able to vectorize arguments to a function
+#that is not usually accepting vectors as arguments.
+l1 <- list(mtcars[,1:4])
+l1
+str(l1)
+l2 <- list(mtcars[,3:8])
+l2
+str(l2)
+# sum of corresponding elements captured in L1 and L2
+sum(mtcars[1],mtcars[2],mtcars[3],mtcars[4],mtcars[3],mtcars[4],mtcars[5],mtcars[6],mtcars[7],mtcars[8])
+mapply(sum, x=l1,y=l2)
+#mapply
+#The mapply() function stands for ‘multivariate’ apply.
+#Its purpose is to be able to vectorize arguments to a function
+#that is not usually accepting vectors as arguments.
+l1 <- list(mtcars[,1:4])
+l1
+l2 <- list(mtcars[,3:8])
+str(l2)
+# sum of corresponding elements captured in L1 and L2
+sum(mtcars[1],mtcars[2],mtcars[3],mtcars[4],mtcars[3],mtcars[4],mtcars[5],mtcars[6],mtcars[7],mtcars[8])
+mapply(sum, x=l1,y=l2)
+mapply(sum, x=l1,y=l2)
+sum(10,12,13)
+# rapply - recursive apply
+rapply(mtcars[,1:3], log2, how='list')
+library(data.table)
+# library Data.Table (open source tool)
+# goals of data.table library is to process large datasets by doing
+# reducing the programming time- fewer ffunctions, less variable repetition
+# reducing the computation time- fast aggregation, update by referencing
+install.packages("data.table")
+install.packages("data.table")
+# library Data.Table (open source tool)
+# goals of data.table library is to process large datasets by doing
+# reducing the programming time- fewer ffunctions, less variable repetition
+# reducing the computation time- fast aggregation, update by referencing
+install.packages("data.table")
+library(data.table)
+df = data.frame(mtcars[,1:5])
+head(df)
+library(data.table)
+1:5
+dt = data.table(mtcars[,1:5])
+dt1 = data.table(mtcars[,1:5])
+tables()
+sapply(dt, class)
+sapply(dt, class)
